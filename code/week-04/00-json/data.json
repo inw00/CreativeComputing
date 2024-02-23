@@ -1,0 +1,26 @@
+{
+    "id": 1234,
+    "name": "cc",
+    "shapes": [
+        {
+            "pos": [100, 100],
+            "color": [255, 0, 0],
+            "shape": "circle"
+        },
+        {
+            "pos": [100, 200],
+            "color": [255, 255, 0],
+            "shape": "rect"
+        },
+        {
+            "pos": [200, 300],
+            "color": [255, 0, 255],
+            "shape": "circle"
+        },
+        {
+            "pos": [0, 0],
+            "color": [0, 255, 0],
+            "shape": "rect"
+        }
+    ] 
+}
