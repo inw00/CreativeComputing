@@ -1,0 +1,44 @@
+h1 {
+    color:#FF66B3;
+    text-align: left;
+    font-family: "Barriecito", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+body {
+    font-family: 'Open+Sans', sans-serif;
+}
+
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust based on desired width */
+    gap: 20px; /* Space between items */
+    padding: 20px; /* Padding around the gallery */
+}
+
+body {
+    padding:10px;
+    background-color:#1A181B;
+}
+
+#canvas-1-container, #how-to-read {
+    flex: 1; /* Allows each child to grow equally */
+    padding: 10px; /* Optional: Adds some space inside each div */
+}
+
+#how-to-read {
+    flex-basis: 30%;
+    color: #FF66B3;
+    text-align: left;
+}
+
+.container {
+    flex-basis: 70%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start; /* Aligns items at the start of the container */
+}
