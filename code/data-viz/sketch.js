@@ -1,7 +1,7 @@
 let trackNum;
 let trackTime;
 let albumColors = [];
-let albumNames = ['comedown_machine','Brief_Inquiry_Into_Online_Relationships', '1989', 'after_hours'];
+let albumNames = ['comedown_machine','brief_inquiry_into_online_relationships', '1989', 'after_hours'];
 let songLength;
 let albumData;
 let trackData;
@@ -9,16 +9,17 @@ let backgroundColor;
 
 let maxDuration;
 let albumTitle;
+let trackTitle;
 let songDuration;
 let albumNum;
 
 
 function preload() {
     //albumNames.forEach((name, index) => {
-        let albumTitle ='after_hours';
-        let trackTitle ='after_hours_track';
+        albumTitle ='1989';
+        trackTitle ='style';
         albumData = loadJSON(`data/${albumTitle}.json`);
-        trackData = loadJSON(`data/${trackTitle}.json`)
+        trackData = loadJSON(`data/${trackTitle}.json`);
   //  });
 }
 
@@ -36,9 +37,9 @@ function setup() {
 }
 
 function draw() {
-    //backgroundBrightness();
-    //backgroundHue();
-    background(400,80,90);
+    console.log(albumTitle, trackTitle);
+   
+    background(random(360),random(100),random(100));
     noLoop();
     drawTrackNum(albumData.total_tracks);
     console.log(albumData.total_tracks)
@@ -97,27 +98,39 @@ function drawTrackNum(totalTrackNum) {
     for (i = 0; i< albumData.total_tracks; i++) {
         let valence = trackData.valence;
         console.log(valence);
-        let hueValue;
-            if (valence > 0.5) {
-                if (random(1) < 0.5) {
-                    hueValue = random(0, 60); // Choose a random number between 0 and 60
-                } else {
-                    huevalue = random(270, 360); // Choose a random number between 270 and 360
-                }   
-            } else {
-                hueValue = random(60,270);
-            }
+        let danceability = trackData.danceability;
+
         let trackDurationMs = songLength[i];
         let trackDurationSec = trackDurationMs/ 1000;
         let barWidthPerSec = width/maxDuration * 1000;
-        let barWidth = map(songDuration,0,maxDuration,0,width);
+        let barWidth = map(trackDurationMs,0,maxDuration,0,width);
         push();
             noStroke();
-            fill(random(hueValue),random(100),random(100));
-            rect(0,i * height/totalTrackNum, barWidth, height/totalTrackNum);
+                rect(0,i * height/totalTrackNum, barWidth, height/totalTrackNum);
 
                 for (let j = 0; j < trackDurationSec; j++) {
-                    let barColor = color(random(360), 80, 90);
+                    let hueValue;
+                    let satValue;
+                    let brightValue;
+                        // valence - hue converter 
+                        if (valence > 0.5) {
+                            if (random(1) < 0.5) {
+                                hueValue = random(0, 60); // Choose a random number between 0 and 60
+                            } else {
+                                huevalue = random(270, 360); // Choose a random number between 270 and 360
+                            }   
+                            } else {
+                            hueValue = random(60,270);
+                        }
+
+                        // danceability - brightness converter 
+                        if (danceability > 0.5) {
+                            brightValue = random(30,60);
+                        } else {
+                            brightValue = random(60,90);
+                        }
+                    
+                    let barColor = color(hueValue, brightValue, random(20,100));
                     fill(barColor);
                     let segmentWidth = map(trackDurationMs, 0, maxDuration, 0, width) / trackDurationSec;
                     rect(j * segmentWidth, i * height / totalTrackNum, segmentWidth, height / totalTrackNum);
