@@ -30,8 +30,16 @@ function setup() {
   Matter.Runner.run(engine);
 
   setInterval(() => { //every function will be called once every 1000 millis(so one second)
-    this.createCircle(random(width * 0.25, width * 0.75, -10));
-
+    if (shapes.length < 3) {
+      const options = {
+        friction: 0,
+        frictionAir: 0,
+        restitution: 1,
+        inertia: Infinity
+      }
+      this.createCircle(
+        random(width * 0.25, width * 0.75, -10));
+    }
   }, 1000);
 }
 
