@@ -1,24 +1,44 @@
-let box;
-let ground;
 let engine;
+let shapes = [];
 
 function setup() {
-    createCanvas(600,600);
-    rectMode(CENTER);
+  createCanvas(600, 600);
+  rectMode(CENTER);
 
-    engine = Matter.Engine.create();
-    box = Matter.Bodies.rectangle(width/2, 40, 80, 80);
-    ground = Matter.Bodies.rectangle(width/2, height, width-10, 20,
-    { isStatic: true});
+  engine = Matter.Engine.create();
 
-    Matter.Composite.add(engine.world, [box, ground]);
-    Matter.Runner.run(engine);
+  const ground = new Rect(engine.world, 
+    createVector(width/2, height),
+    createVector(width - 10, 30), { isStatic: true });
+  
+  Matter.Runner.run(engine);
+  shapes.push(ground);
+}
+
+function createShape(x, y, options) {
+  let shape;
+  if (random() > 0.5) {
+    shape = new Rect(engine.world,
+      createVector(x, y), 
+      createVector(random(10, 50), random(10,50)),
+      options);
+  } else {
+    shape = new Circle(engine.world,
+      createVector(x, y), 
+      createVector(random(10, 50), random(10,50)),
+      options);
+  }
+  shapes.push(shape);
 }
 
 function draw() {
-    background(200);
+  background(200);
 
-    rect(box.position.x, box.position.y, 80,80);
-    rect(ground.position.x,ground.position.y, width-10, 30)
+  shapes.forEach( shape => {
+    shape.display();
+  });
+
+  if (mouseIsPressed) {
+    createShape(mouseX, mouseY, null);
+  }
 }
-

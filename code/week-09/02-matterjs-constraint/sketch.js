@@ -54,6 +54,7 @@ function createCircle(x, y, options) {
 
 function draw() {
   background(200);
+  noStroke();
   walls.display();
   shapes.forEach( shape => {
     shape.display();
