@@ -3,6 +3,7 @@ let adviceText;
 let randomColor;
 let confettiColor = ['#F564A9','#FEFDFF','#FA7921','#FDE74C'];
 let cookie;
+let crack;
 let showImage = true;
 let resetButton;
 let engine;
@@ -12,6 +13,7 @@ let engine;
 function preload() {
   myFont = loadFont('../assets/ChronicleDispComp-Semibold.otf'); 
   cookie = loadImage('../assets/cookie.png'); 
+  crack = loadImage('../assets/crack.png')
 }
 
 function setup() {
@@ -23,6 +25,14 @@ function setup() {
     { isStatic: true },
     '#2E282A'
     )
+    push();
+    noFill();
+    const wall = new Rect(engine.world,
+      createVector(width/2, height/2 - 30),
+      createVector(width,5),
+      { isStatic: true }
+      )
+    pop();
   randomColor = random(['#009FFD', '#CCC9DC', '#F4D35E', '#3A86FF']);
   // noLoop();
   let cnv = createCanvas(600, 600);
@@ -117,6 +127,7 @@ function mouseClicked() {
       fill('#FFFFEA');
       //rect(width/2 - 50, height/2 - 50, width-20, 40);
     pop();
+    //image(crack, width/3,30, width, height);
   }
   
 }
