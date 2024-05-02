@@ -11,11 +11,8 @@ let engine;
 let randomX;
 let randomY1;
 let randomY2;
-let randomX1;
-let randomX2;
 let posterVersions = [];
 let poster;
-let currentGraphic = null; // This will store the function reference of the current graphic
 
 
 function preload() {
@@ -72,7 +69,7 @@ function draw() {
   //lines();
   //bubbles();
   //gears();
-  //gradient();
+  gradient();
 
   if (showImage) {
     background(randomColor);
@@ -80,30 +77,23 @@ function draw() {
   } else {
     clear();
     background(randomColor);
-    if (typeof currentGraphic === 'function') {
-      currentGraphic(); // Call the currently selected graphic  
-    }
   }
-
   
 
   if (adviceText) {
-    /*
-    let maxWidth = width - 40; // Adjust as needed for padding
-    let maxHeight = height - 40; // Adjust as needed for padding
-    let lines = splitTextIntoLines(adviceText, maxWidth, 60); // Assuming fontSize is 60 for example
-    textSize(60); // Set the text size if not set in splitTextIntoLines
-
+    // Split the adjusted text back into lines for drawing
+    let numOfChar = adviceText.length;
+    let lines = adviceText.split('\n');
+    
+    let fontSize = parseInt(textSize(), 10); // Get current font size
+    let textHeight = lines.length * (fontSize * 1.2); // Total text block height
+    let startY = (height - textHeight) / 2 + fontSize / 2; // Calculate start Y position
+    textSize(8000/numOfChar);
     for (let i = 0; i < lines.length; i++) {
-        // Calculate the Y position of each line
-        let yPos = i * 72; // 72 is line height, adjust based on your fontSize and desired spacing
-        text(lines[i], 20, width/2, maxWidth); // Draw each line
-    */  
-        fitText(adviceText, width - 40, height - 40); // Use padding as needed
-
+      
+    text(adviceText, 0, 0, width, height); // Draw each line
     }
-
-
+  }
 
   if (mouseIsPressed) {
    
@@ -138,18 +128,18 @@ function initialScreen() {
 function fitText(text, maxWidth, maxHeight) {
   let fontSize = 60; // Start with a reasonable font size
   textSize(fontSize);
-  textLeading(fontSize * 1.4);
+  //textLeading(fontSize * 3.5);
 
   // Adjust font size based on width
-  while (textWidth(text) > maxWidth && fontSize > 10) {
+  while (textWidth(text) > maxWidth-40 && fontSize > 0) {
     fontSize--;
     textSize(fontSize);
-    textLeading(fontSize * 1.4);
   }
   let lines = splitTextIntoLines(text, maxWidth, fontSize);
+  textLeading(fontSize * 1.4);
   let textHeight = lines.length * (fontSize * 1.4); // 1.2 accounts for line spacing
   // Adjust font size based on height
-  while (textHeight > maxHeight && fontSize > 10) {
+  while (textHeight > maxHeight && fontSize > 0) {
     fontSize--;
     textSize(fontSize);
     textLeading(fontSize * 1.4);
@@ -164,26 +154,26 @@ function fitText(text, maxWidth, maxHeight) {
 }
 
 function splitTextIntoLines(text, maxWidth, fontSize) {
-  textSize(fontSize); // Ensure the textSize is set for correct measurements
-  let words = text.split(' '); // Split the input text into words
+  textSize(fontSize);
+  textLeading(fontSize * 1.2);
+
+  let words = text.split(' ');
   let lines = [];
-  let currentLine = words[0]; // Start with the first word
+  let currentLine = words[0];
 
   for (let i = 1; i < words.length; i++) {
-      let word = words[i];
-      let testLine = currentLine + ' ' + word;
-      // Check if adding this word would exceed the maxWidth
-      if (textWidth(testLine) > maxWidth) {
-        lines.push(currentLine); // Push the current line to the lines array
-        currentLine = word;
-      } else {
-          currentLine = testLine; // Start a new line with the current word
-      }
+    let word = words[i];
+    let width = textWidth(currentLine + ' ' + word);
+    if (width < maxWidth) {
+      currentLine += ' ' + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
   }
-  lines.push(currentLine); // Push the last line to the array
-  return lines; // Return the array of lines
+  lines.push(currentLine);
+  return lines;
 }
-
 
 function mouseClicked() {
 
@@ -193,32 +183,25 @@ function mouseClicked() {
     showImage = false;
     redraw();
     posterVersions = ['lines','bubbles', 'gears','gradient',5,6];
-    let poster = random(posterVersions);
+    poster = random(posterVersions);
   
-    switch (poster) {
-      case 'lines':
-        currentGraphic = lines;
-        break;
-      case 'bubbles':
-        currentGraphic = lines;
-        break;
-      case 'gears':
-        currentGraphic = gears;
-        break;
-      case 'gradient':
-        currentGraphic = gradient;
-
-      default:
-        currentGraphic = null;
+    if (poster === 'lines') {
+      lines();
+    } else if ( poster === 'bubbles' ) {
+      bubbles();
+    } else if ( poster === 'gears' ) {
+      gears();
     }
 
-    redraw();
-    
     fetchAdvice();
     // if (adviceText) {
     //  fitText(adviceText);
    // }
-  
+    
+    push();
+      fill('#FFFFEA');
+      //rect(width/2 - 50, height/2 - 50, width-20, 40);
+    pop();
 
   }
   
@@ -245,17 +228,12 @@ function createShape(x, y, options = {}) {
 }
 
 
-
 function resetSketch() {
   randomColor = random(['#009FFD', '#DB2955', '#CCC9DC', '#F4D35E', '#3A86FF', '#E5F993']);
-  clear();
   background(randomColor);
-
-  adviceText = '';
-
   showImage = true;
 
-  redraw();
+  //fetchAdvice();
 }
 
 function saveSketch() {
