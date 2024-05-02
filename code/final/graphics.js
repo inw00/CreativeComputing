@@ -64,13 +64,13 @@ function gears() {
         translate(width * 0.2, height * 0.6);            
         fill('#7EE081');
         rotate(frameCount / 200.0);
-        star(0, 0, 150, 300, 50);
+        star(0, 0, 100, 300, 50);
     pop();
 
     push(); // purple
         noStroke();
         translate(width * 0.7, height * 0.3);            
-        fill('#313B72');
+        fill('#A14EBF');
         rotate(-frameCount / 100.0);
         star(0, 0, 150, 200, 50);
     pop();
@@ -86,20 +86,31 @@ function gears() {
     push(); // white 
         noStroke();
         translate(width * 0.7, height * 0.7);            
-        fill('#F4FAFF');
+        fill('#5BC8AF');
         rotate(-frameCount / 100.0);
         star(0, 0, 150, 70, 30);
+    pop();
+
+    push(); // white 
+        noStroke();
+        translate(width * 0.8, height * 0.9);            
+        fill('#F1FAEE');
+        rotate(-frameCount / 100.0);
+        star(0, 0, 100, 40, 30);
     pop();
 }
 
 function gradient() {
-    let cols = 20;
-    let rows = 20;
-    let spacing = width / cols;
+    let cols = 60;
+    let rows = 60;
+    let colSpacing = width / cols;
+    let rowSpacing = height / rows;
+
     
-    let startColor = color('#DB2955');
-    let endColor = color('#B98389');
+    let startColor = color('#EE6352');
+    let endColor = color('#08B2E3');
     push(); 
+        noStroke();
         for (let i=0; i < cols; i++) {
             for (let j = 0; j < rows; j++) {
                 let lerpAmt = (i + j * cols) / (cols * rows - 1);
@@ -107,10 +118,104 @@ function gradient() {
                 let interColor = lerpColor(startColor, endColor, lerpAmt);
                 fill(interColor);
 
-                let x = i * spacing + spacing / 2;
-                let y = j * spacing + spacing / 2;
-            circle(x,y,20);
+                let x = i * colSpacing + colSpacing / 2;
+                let y = j * rowSpacing + rowSpacing / 2;
+                circle(x,y,30);
             }
-    }
+        }
+        fill('#ffffff');
+        circle(width/2,height/4, 400);
+        circle(width/2,height*3/4, 400);
+
     pop();
+}
+
+function triColor() {
+    push();
+        noStroke();
+        push();
+            fill('#FFC6D9');
+            triangle(0,0,0,width, height, 0);
+        pop();
+        push();
+            fill('#C3BEF7');
+            triangle(width/2,height/2,width,0, 0, height);
+        pop();
+    pop();
+}
+
+function flat() {
+    function createShape(x, y, options = {}) {
+        let shape;
+        if (random() > 0.5) {
+          shape = new Rect(engine.world,
+            createVector(x, y),  
+            createVector(random(10, 80), random(10,80)),
+            options, color);
+        } else {
+          shape = new Circle(engine.world,
+            createVector(x, y), 
+            createVector(random(10, 80), random(10,80)),
+            options, color);
+        }
+        shapes.push(shape);
+
+        shapes.forEach( shape => {
+            shape.display();
+          });
+
+        createShape(width/2, 0, null);
+
+      }
+    pop();
+}
+
+
+
+function gradientBars() {
+    let cols = 60;
+    let rows = 60;
+    let colSpacing = width / cols;
+    let rowSpacing = height / rows;
+
+    
+    let startColor = color('#F51AA4');
+    let endColor = color('#EBF5EE');
+    push(); 
+        noStroke();
+        for (let i=0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                let lerpAmt = (i + j * cols) / (cols * rows - 1);
+
+                let interColor = lerpColor(startColor, endColor, lerpAmt);
+                fill(interColor);
+
+                let x = i * colSpacing + colSpacing / 2;
+                let y = j * rowSpacing + rowSpacing / 2;
+                circle(x,y,10);
+            }
+        }
+    pop();
+    cols = 60;
+    rows = 60;
+    colSpacing = width / cols;
+    rowSpacing = height / rows;
+
+    
+    startColor = color('#EBF5EE');
+    endColor = color('#F51AA4');
+    push(); 
+        noStroke();
+        for (let i=0; i < cols; i+=2) {
+            for (let j = 0; j < rows; j++) {
+                let lerpAmt = (i + j * cols) / (cols * rows - 1);
+
+                let interColor = lerpColor(startColor, endColor, lerpAmt);
+                fill(interColor);
+
+                let x = i * colSpacing + colSpacing / 2;
+                let y = j * rowSpacing + rowSpacing / 2;
+                circle(x,y,10);
+            }
+        }
 }

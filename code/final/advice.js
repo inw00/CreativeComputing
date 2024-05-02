@@ -4,7 +4,7 @@ function fetchAdvice() {
         .then(data => {
             adviceText = data.slip.advice;
             adviceTextUpper = adviceText.toUpperCase();
-            fitText(adviceTextUpper, width, height); // Make sure to pass height as well
+            //fitText(adviceTextUpper, width, height); // Make sure to pass height as well
             console.log(adviceText);  // Log advice
         })
     .catch(error => console.error('Error fetching data:', error));

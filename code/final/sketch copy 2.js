@@ -36,7 +36,7 @@ function setup() {
     )
 
   colorMode(HSB);
-  randomColor = random(['#009FFD', '#AF2BBF', '#F4D35E', '#3A86FF', '#E5F993']);
+  randomColor = random(['#009FFD', '#CCC9DC', '#F4D35E', '#3A86FF', '#E5F993']);
   // noLoop();
   let cnv = createCanvas(600, 800);
   textAlign(CENTER, CENTER);
@@ -83,53 +83,23 @@ function draw() {
 }
 
 function displayAdviceText() {
-  push();
-  fill('#FAFF00');
   if (adviceText) {
-    push(); 
-      let maxWidth = width - 40;  // Adjusted for padding
-      let maxHeight = height -40; // Adjusted for demonstration, set according to your UI design
-      let fontSize = 5000/adviceText.length;
-       if (fontSize > 300){
-          fontSize = 300;
-       } 
-      textSize(fontSize);
-      textFont(myFont);
-      textWrap(WORD);
+    let formattedText = fitText(adviceText, width - 40, height - 40); // Generate formatted text
+    let yPos = 100; // Start y-position for the text
+    textSize(30); // Assume a fixed text size for simplicity, adjust as needed
+    textLeading(34); // Set line height
 
-      /*
-      // Dynamically adjust text size to fit within maxWidth
-      while (textWidth(adviceText) > maxWidth && fontSize > 10) {
-        fontSize--;
-        textSize(fontSize);
-      }
-      */
+    fill(0); // Set text color to black for visibility
+    stroke(255); // White stroke can help with visibility on complex backgrounds
+    strokeWeight(0.5); // Light stroke weight
 
-      // Set text leading to be slightly more than the font size for clear readability
-      textLeading(fontSize * 0.8);
-
-      fill(0); // Set text color to black for visibility
-      noStroke(); // No outline for the text
-      textAlign(LEFT, TOP); // Align text to the left and top
-
-      // Calculate starting y-position based on total height to vertically center
-      let textHeight = fontSize * adviceText.split(' ').length;
-      let yPos = (height - textHeight) / 2 + height / 4; // Adjust yPos to center the text vertically
-      if (yPos < 20) {
-        yPos = 50;
-      }
-      if (fontSize < 80) {
-        yPos = 20;
-      }
-      
-      console.log(height, fontSize, textLeading(),adviceText.split(' ').length,textHeight, yPos);
-
-      text(adviceTextUpper, 20, yPos, maxWidth); // Draw text within specified bounds
-    pop();
-    }
-
+    // Draw each line of the formatted text
+    formattedText.forEach(line => {
+      text(line, 20, yPos, width - 40); // Draw text with padding
+      yPos += 34; // Increment y position by line height
+    });
+  }
 }
-
 
 function initialScreen() {
   textFont(myFont);
@@ -152,6 +122,62 @@ function initialScreen() {
     image(arrow, width -200, 200, 200, 200);
   pop();
 }
+ 
+function fitText(inputText, maxWidth, maxHeight) {
+  let fontSize = 72; // Start with a reasonable font size
+  textSize(fontSize);
+  textLeading(fontSize * 1.4);
+
+  // Adjust font size based on width
+  while (textWidth(inputText) > maxWidth && fontSize > 10) {
+    fontSize--;
+    textSize(fontSize);
+    textLeading(fontSize * 1.4);
+  }
+  let lines = splitTextIntoLines(inputText, maxWidth, fontSize);
+  let textHeight = lines.length * (fontSize * 1.4); // 1.2 accounts for line spacing
+  // Adjust font size based on height
+  while (textHeight > maxHeight && fontSize > 10) {
+    fontSize--;
+    textSize(fontSize);
+    textLeading(fontSize * 1.4);
+    lines = splitTextIntoLines(inputText, maxWidth, fontSize);
+    textHeight = lines.length * (fontSize * 1.4);
+  }
+  return lines;
+
+  adviceText = lines.join('\n'); // Update text to be drawn
+  let yPos = 100; // Start position for text, adjust as needed
+  for (let line of lines) {
+    text(line, 10, yPos, maxWidth); // Draw each line
+    yPos += fontSize * 1.4; // Move to next line position
+  }  
+  redraw(); // Redraw with adjusted settings
+  console.log(lines.length,fontSize,textHeight, maxWidth, maxHeight);
+
+}
+
+function splitTextIntoLines(inputText, maxWidth, fontSize) {
+  textSize(fontSize); // Ensure the textSize is set for correct measurements
+  let words = inputText.split(' '); // Split the input text into words
+  let lines = [];
+  let currentLine = words[0]; // Start with the first word
+
+  for (let i = 1; i < words.length; i++) {
+      let word = words[i];
+      let testLine = currentLine + ' ' + word;
+      // Check if adding this word would exceed the maxWidth
+      if (textWidth(testLine) > maxWidth) {
+        lines.push(currentLine); // Push the current line to the lines array
+        currentLine = word;
+      } else {
+          currentLine = testLine; // Start a new line with the current word
+      }
+  }
+  lines.push(currentLine); // Push the last line to the array
+  return lines; // Return the array of lines
+}
+
 
 function mouseClicked() {
 
@@ -160,7 +186,7 @@ function mouseClicked() {
   if (mouseX >= 40 && mouseX <= width-40 && mouseY >= 300 && mouseY <= height-40) {
     showImage = false;
     redraw();
-    posterVersions = ['lines','bubbles', 'gears','gradient','triColor','flat', 'gradientBars'];
+    posterVersions = ['lines','bubbles', 'gears','gradient',5,6];
     let poster = random(posterVersions);
   
     switch (poster) {
@@ -175,16 +201,7 @@ function mouseClicked() {
         break;
       case 'gradient':
         currentGraphic = gradient;
-        break;
-      case 'triColor':
-        currentGraphic = triColor;
-        break;
-      case 'flat':
-        currentGraphic = flat;
-        break;  
-      case 'gradientBars':
-        currentGraphic = gradientBars;
-        break;      
+
       default:
         currentGraphic = null;
     }
